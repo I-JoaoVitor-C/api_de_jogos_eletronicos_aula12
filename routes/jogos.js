@@ -13,7 +13,7 @@ function salvarJogos(jogos) {
 }
 function gerarId(jogos) {
     if (jogos.length === 0) return 1;
-    return Math.max(...jogos.map(j => j.id) + 1)
+    return Math.max(...jogos.map(j => j.id)) + 1
 }
 
 // GET/ jogos - com filtros opcionais via Query Paramenters
@@ -24,11 +24,12 @@ function gerarId(jogos) {
 //            GET/jogos?categoria=RPG&plataforma=Switch ← dois filtros!
 router.get('/', (req, res) => {
     let jogos = lerJogos();
-    const {nome, categoria, plataforma} = req.query; // ← NOVO
+    const {nome, categoria, plataforma, nota_min} = req.query; // ← NOVO
 
-    if (nome) jogos = jogos.filter(j => nome.toLowerCase().include(nome.toLocaleLowerCase()));
-    if (categoria) jogos = jogos.filter(j => j.categoria.toLocaleLowerCase() === categoria.toLocaleLowerCase());
-    if (plataforma) jogos = jogos.filter (j => j.plataforma.toLocaleLowerCase() === plataforma.toLocaleLowerCase());
+    if (nome) jogos = jogos.filter(j => j.nome.toLowerCase().includes(nome.toLowerCase()));
+    if (categoria) jogos = jogos.filter(j => j.categoria.toLowerCase() === categoria.toLowerCase());
+    if (plataforma) jogos = jogos.filter (j => j.plataforma.toLowerCase() === plataforma.toLowerCase());
+    if (nota_min) jogos = jogos.filter(j => j.nota>=Number(nota_min));
     res.json(jogos);
 });
 
